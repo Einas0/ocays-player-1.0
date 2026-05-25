@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://cwcqvq1erobk2"]
+
+[ext_resource type="PackedScene" uid="uid://dvplgju3dcd88" path="res://assets/new folder/Cat_2.glb" id="1_2i48f"]
+
+[node name="Cat_2" unique_id=750851751 instance=ExtResource("1_2i48f")]

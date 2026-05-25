@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://dn2bqlmilr0kx"]
+
+[ext_resource type="PackedScene" uid="uid://vwk1kywfy2gc" path="res://scenes/player.tscn" id="1_tq2pn"]
+
+[node name="Node3D" type="Node3D" unique_id=1784734223]
+
+[node name="Player" parent="." unique_id=1682821 instance=ExtResource("1_tq2pn")]
+transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 0, 0, 1)
+script = null
+
+[node name="RigidBody3D" parent="Player" index="2" unique_id=1999811862]
+script = null
+
+[editable path="Player"]

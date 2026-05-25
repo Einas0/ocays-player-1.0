@@ -1,0 +1,60 @@
+[gd_scene format=3 uid="uid://b7uq3sqpt5dx6"]
+
+[ext_resource type="PackedScene" uid="uid://dvplgju3dcd88" path="res://assets/new folder/Cat_2.glb" id="1_0fd3h"]
+
+[sub_resource type="GDScript" id="GDScript_0fd3h"]
+script/source = "extends CharacterBody3D
+
+
+const SPEED = 5.0
+const JUMP_VELOCITY = 4.5
+
+
+func _physics_process(delta: float) -> void:
+	# Add the gravity.
+	if not is_on_floor():
+		velocity += get_gravity() * delta
+
+	# Handle jump.
+	if Input.is_action_just_pressed(\"ui_accept\") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
+
+	# Get the input direction and handle the movement/deceleration.
+	# As good practice, you should replace UI actions with custom gameplay actions.
+	var input_dir := Input.get_vector(\"move_right\",\"move_left\",\"move_forward\",\"move_backward\")
+	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	if direction:
+		velocity.x = direction.x * SPEED
+		velocity.z = direction.z * SPEED
+	else:
+		velocity.x = move_toward(velocity.x, 0, SPEED)
+		velocity.z = move_toward(velocity.z, 0, SPEED)
+
+	move_and_slide()
+"
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0fd3h"]
+radius = 0.2
+height = 0.4
+
+[node name="Node3D" type="Node3D" unique_id=382503576]
+
+[node name="visuals" type="Node3D" parent="." unique_id=1357758012]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.061573878)
+
+[node name="Cat_2" parent="visuals" unique_id=750851751 instance=ExtResource("1_0fd3h")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+
+[node name="camera_mount" type="Node3D" parent="." unique_id=63058140]
+
+[node name="Camera3D" type="Camera3D" parent="camera_mount" unique_id=15727519]
+transform = Transform3D(0.9629699, -0.053442407, 0.2642592, 0, 0.98015714, 0.1982219, -0.26960894, -0.19088173, 0.94386184, 0.3088022, 0.7771081, 0.84456223)
+
+[node name="Node3D" type="Node3D" parent="." unique_id=2133980575]
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="Node3D" unique_id=1924473287]
+script = SubResource("GDScript_0fd3h")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/CharacterBody3D" unique_id=2051867354]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+shape = SubResource("CapsuleShape3D_0fd3h")

@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://vwk1kywfy2gc"]
+
+[ext_resource type="Script" uid="uid://chyknjlnvgw6l" path="res://scripts/player.gd" id="1_3vyb7"]
+[ext_resource type="PackedScene" uid="uid://dvplgju3dcd88" path="res://assets/new folder/Cat_2.glb" id="2_g2els"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_3vyb7"]
+height = 0.25
+radius = 0.3
+
+[node name="Player" type="Node3D" unique_id=1682821]
+transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 0, 0, 0)
+script = ExtResource("1_3vyb7")
+move_speed = null
+jump_force = null
+acceleration = null
+
+[node name="visuals" type="Node3D" parent="." unique_id=1004083684]
+
+[node name="Cat_2" parent="visuals" unique_id=750851751 instance=ExtResource("2_g2els")]
+transform = Transform3D(1, 0, -1.7484555e-07, 0, 1, 0, 1.7484555e-07, 0, 1, 0, -0.02410902, 0)
+
+[node name="camera_mount" type="Node3D" parent="." unique_id=732216524]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.17426369, 0)
+
+[node name="Camera3D" type="Camera3D" parent="camera_mount" unique_id=628087728]
+transform = Transform3D(1, 0, 0, 0, 0.9927657, 0.12006754, 0, -0.12006754, 0.9927657, 0.13546628, 0.27967274, 0.6410679)
+current = true
+
+[node name="RigidBody3D" type="RigidBody3D" parent="." unique_id=1999811862]
+script = ExtResource("1_3vyb7")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D" unique_id=895115479]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09999999, 0)
+shape = SubResource("CylinderShape3D_3vyb7")

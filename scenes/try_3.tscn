@@ -1,0 +1,109 @@
+[gd_scene format=3 uid="uid://dfanknou67din"]
+
+[ext_resource type="PackedScene" uid="uid://cwcqvq1erobk2" path="res://scenes/cat_2.tscn" id="1_mslth"]
+
+[sub_resource type="GDScript" id="GDScript_mslth"]
+script/source = "extends CharacterBody3D
+
+@onready var Pivot: Node3D = $Pivot
+@onready var camera_3d: Camera3D = $Pivot/Camera3D
+const SPEED = 3.5
+const JUMP_VELOCITY = 4.5
+var MOUSE_SENS: float = 0.0007
+
+func _ready() -> void:
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+
+
+func _physics_process(delta: float) -> void:
+	# Add the gravity.
+	if not is_on_floor():
+		velocity += get_gravity() * delta
+
+	# Handle jump.
+	if Input.is_action_just_pressed(\"ui_accept\") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
+
+	# Get the input direction and handle the movement/deceleration.
+	# As good practice, you should replace UI actions with custom gameplay actions.
+	var input_dir := Input.get_vector(\"move_left\", \"move_right\", \"move_forward\", \"move_backward\")
+	
+	######
+	# 1. Get the direction vectors of your Pivot node
+	var forward: Vector3 = $Pivot.global_transform.basis.z
+	var right: Vector3 = $Pivot.global_transform.basis.x
+	
+	forward.y = 0
+	right.y = 0
+	forward = forward.normalized()
+	right = right.normalized()
+	
+	# 2. Combine them (Inverting forward so W goes t=into the screen)
+	var direction: Vector3 = (right * input_dir.x + forward * input_dir.y).normalized()
+	######
+	
+	#var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	if direction:
+		velocity.x = direction.x * SPEED
+		velocity.z = direction.z * SPEED
+		
+		# Smoothly turn the cat visuals node to face where you are running
+		var look_target: Vector3 = global_position + direction
+		var target_transform : Transform3D = $visuals.transform.looking_at(look_target, Vector3.UP)
+		$visuals.transform = $visuals.transform.interpolate_with(target_transform, 0.15)
+		
+	else:
+		velocity.x = move_toward(velocity.x, 0, SPEED)
+		velocity.z = move_toward(velocity.z, 0, SPEED)
+
+	move_and_slide()
+
+######
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		#var y_rot:float = -event.relative.x  * MOUSE_SENS
+		#rotate_y(y_rot)
+	#
+		#var x_tilt:float = -event.relative.x  * MOUSE_SENS
+		#rotate_x(x_tilt)
+		#
+		
+		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+			# 1. Rotate the PIVOT left/right (Y-axis), not the body
+			Pivot.rotate_y(-event.relative.x * MOUSE_SENS)
+			# 2. Rotate the CAMERA  UP/DOWN (X-axis) inside the pivot
+			camera_3d.rotate_x(-event.relative.y* MOUSE_SENS)
+			# 3. Clamp the vertical camera rotation so it doesn't flip upside down
+			camera_3d.rotation.x = clamp(camera_3d.rotation.x, deg_to_rad(-60), deg_to_rad(60))
+######	 
+			
+	
+	
+	
+"
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_wcuhe"]
+radius = 0.2
+height = 0.4
+
+[node name="Node3D" type="Node3D" unique_id=1190296003]
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=1683857260]
+script = SubResource("GDScript_mslth")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=1025510611]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.17425902, -0.021296471)
+shape = SubResource("CapsuleShape3D_wcuhe")
+
+[node name="Pivot" type="Node3D" parent="CharacterBody3D" unique_id=394122050]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.16869411, -0.08045004)
+
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D/Pivot" unique_id=1086971977]
+transform = Transform3D(0.9815905, 0, 0.19099745, 0, 1, 0, -0.19099745, 0, 0.9815905, 0.22714227, 0.5201143, 1.1239603)
+
+[node name="visuals" type="Node3D" parent="CharacterBody3D" unique_id=495046712]
+
+[node name="Cat_2" parent="CharacterBody3D/visuals" unique_id=750851751 instance=ExtResource("1_mslth")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0.047240168)
+
+[node name="Node" type="Node" parent="." unique_id=260902670]
