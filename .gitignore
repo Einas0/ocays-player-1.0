@@ -1,0 +1,17 @@
+# Godot-specific ignores
+.godot/
+*.uid
+
+# Imported assets cache
+.import/
+export_preset.cfg
+
+# Mono/C# specifics
+.mono/
+data_*/
+mono_crash_*.log
+
+# System dumps
+*.log
+*.tmp
+.DS_Store
